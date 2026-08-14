@@ -1,0 +1,1 @@
+export IMAGENET_ROOT=""
