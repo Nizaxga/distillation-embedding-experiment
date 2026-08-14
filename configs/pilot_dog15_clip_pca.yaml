@@ -2,12 +2,12 @@ dataset: imagenet_dog15
 backbone: clip_vit_b32
 method: pca
 k: 32              # placeholder: confirm against paper's Table I best-k for Dog15/CLIP/PCA
-m: 2000
+m: 1000  # precached Drive dir has only 100 imgs/class = 1500 total; leave 500 for eval
 seed: 0
 student_arch: small_cnn
-mse_weight: 0.5
-cosine_weight: 0.5
-epochs: 10
+mse_weight: 0.2
+cosine_weight: 0.8
+epochs: 60
 batch_size: 64
 lr: 0.0003
 eval_seeds: [0]      # pilot uses 1 seed; full sweep uses 5 per paper convention

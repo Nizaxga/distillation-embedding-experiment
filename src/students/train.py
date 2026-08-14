@@ -83,6 +83,7 @@ def train_student(
 
     model = build_student(cfg.student_arch, cfg.k).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=cfg.epochs)
     ckpt_dir = checkpoint_dir(cfg.run_name)
 
     step = 0
@@ -112,9 +113,11 @@ def train_student(
                 val_cos.append(cos)
         print(
             f"[train] epoch {epoch}: train_loss={np.mean(train_losses):.4f} "
-            f"val_mse={np.mean(val_mse):.4f} val_cos_sim={np.mean(val_cos):.4f}"
+            f"val_mse={np.mean(val_mse):.4f} val_cos_sim={np.mean(val_cos):.4f} "
+            f"lr={scheduler.get_last_lr()[0]:.2e}"
         )
         torch.save(model.state_dict(), ckpt_dir / f"epoch_{epoch}.pt")
+        scheduler.step()
 
     torch.save(model.state_dict(), ckpt_dir / "final.pt")
     return model
